@@ -6,7 +6,9 @@ exactly**. Two skills ship in this plugin:
 
 - **endpoint-rearchitect** — language-agnostic: given one endpoint (e.g.
   `/search`), trace it end-to-end, pin its behavior, then restructure.
-  Supports Java/Kotlin, JavaScript/TypeScript, Python, Go, C#, Ruby, PHP.
+  Also decomposes god files — one file with many endpoints and lots of
+  code — refactoring all of them cluster by cluster. Supports Java/Kotlin,
+  JavaScript/TypeScript, Python, Go, C#, Ruby, PHP.
 - **java-modernization** — deep Java/Spring specialization: version
   upgrades, Spring Boot 2→3, javax→jakarta, dependency alignment, with a
   searchable knowledge base.
@@ -40,6 +42,20 @@ that pass on the untouched code → restructure in always-green commits →
 validate and report. A slice with zero tests gets no structural change
 until it is pinned.
 
+**God files** (many endpoints + lots of code in one file) get the batch
+planner:
+
+```bash
+python3 scripts/plan_refactor.py --root /path/to/project            # hotspot inventory
+python3 scripts/plan_refactor.py --root . --file src/app.js         # decomposition plan
+```
+
+It clusters all endpoints in the file by resource, marks clusters
+read-only vs read/write, and phases their extraction safest-first; the
+god-file decomposition playbook then extracts cluster by cluster (pin →
+extract → delegating mount → full suite → commit) until the file is just
+a composition root.
+
 ## java-modernization (Java/Spring deep-dive)
 
 Enterprise Java modernization: analyze, upgrade, refactor, validate, and
@@ -62,13 +78,14 @@ Covers the classic legacy-to-modern paths:
 |---|---|---|
 | **Skill: endpoint-rearchitect** | `skills/endpoint-rearchitect/SKILL.md` | Language-agnostic 5-phase re-architecture workflow with universal tracer |
 | **Universal tracer** | `skills/endpoint-rearchitect/scripts/trace_endpoint.py` | Route detection + dependency walking + behavior markers for 7 languages / 20+ frameworks |
-| **Playbook** | `skills/endpoint-rearchitect/references/rearchitecture-playbook.md` | Trace → contract → pin → restructure → validate, with per-stack test-harness table |
+| **Batch planner** | `skills/endpoint-rearchitect/scripts/plan_refactor.py` | Hotspot inventory + god-file decomposition plans (clusters, risk, safest-first phases) |
+| **Playbooks** | `skills/endpoint-rearchitect/references/` | Single-endpoint (trace → contract → pin → restructure → validate, per-stack test-harness table) and god-file decomposition |
 | **Skill: java-modernization** | `skills/java-modernization/SKILL.md` | Priority rules, 5-step workflow (assess → plan → migrate → validate → report), behavior-preservation guardrails |
 | **Knowledge base** | `skills/java-modernization/data/*.csv` | ~30-component version compatibility matrix, 30+ deprecated-API replacements with behavior-risk ratings, full javax→jakarta package map (including which packages must **stay** javax) |
 | **Search engine** | `skills/java-modernization/scripts/search.py` | Dependency-free Python 3 search over the knowledge base (ascii / markdown / json output) |
 | **Spring slice tracer** | `skills/java-modernization/scripts/trace_endpoint.py` | Spring-specific tracing with interface→impl and JPA-entity resolution |
 | **References** | `skills/java-modernization/references/` | Upgrade checklists, the Java endpoint re-architecture playbook, and the migration-report template |
-| **Slash commands** | `commands/` | `/rearchitect-endpoint /search` (any language) · `/java-endpoint /search` (Spring) · `/java-modernization` (full Java workflow) |
+| **Slash commands** | `commands/` | `/rearchitect-endpoint /search` (any language) · `/decompose-file src/app.js` (refactor ALL endpoints in a god file) · `/java-endpoint /search` (Spring) · `/java-modernization` (full Java workflow) |
 | **Agents** | `agents/` | `endpoint-tracer` (read-only slice mapping + behavior contract, any language) · `behavior-guardian` (characterization tests + behavior-change diff review, any language) · `java-modernizer` (end-to-end Java migrations) |
 | **Plugin manifest** | `.claude-plugin/` | Marketplace-installable packaging |
 
@@ -117,6 +134,8 @@ cp -R refactor-skill/skills/java-modernization  ~/.claude/skills/
 ```
 /rearchitect-endpoint /search          # any language / framework
 /rearchitect-endpoint /api/orders/{id}
+/decompose-file src/app.js             # refactor ALL endpoints in a god file
+/decompose-file                        # scan the repo for hotspots first
 /java-modernization Java 21 + Spring Boot 3
 /java-modernization assess only
 /java-endpoint /search                 # Spring-specific deep trace

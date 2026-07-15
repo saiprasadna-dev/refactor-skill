@@ -9,9 +9,12 @@ description: >-
   supporting Java/Kotlin (Spring, JAX-RS, Ktor), JavaScript/TypeScript
   (Express, Hono, NestJS, Fastify, Next.js), Python (FastAPI, Flask,
   Django), Go (Gin, Echo, Chi, Fiber, net/http), C# (ASP.NET Core), Ruby
-  (Rails, Sinatra), and PHP (Laravel, Symfony). Use when a project needs
-  re-architecture, endpoint-scoped refactoring, layering cleanup, or a
-  safe restructuring plan in any language.
+  (Rails, Sinatra), and PHP (Laravel, Symfony). Also handles god files —
+  one file defining many endpoints with lots of code — via a batch
+  planner that clusters all endpoints and phases their extraction. Use
+  when a project needs re-architecture, endpoint-scoped refactoring,
+  splitting a large file with many routes, layering cleanup, or a safe
+  restructuring plan in any language.
 ---
 
 # Endpoint Re-Architect
@@ -31,6 +34,7 @@ untouched code.
 
 - "Re-architect this project / this endpoint"
 - "Restructure /search end-to-end"
+- "This file has lots of endpoints and too much code — refactor all of it"
 - Layering cleanup (fat controllers, tangled services, no seams)
 - Preparing a slice for extraction (modularization, strangler-fig)
 - Any structural refactor where behavior must provably not change
@@ -71,6 +75,27 @@ code, and complete it with what static analysis can't see — AOP/aspects,
 DI wiring in config, middleware applied by path pattern, reflection,
 dynamic routing, database triggers. If it finds no route, run
 `--list-routes` and locate the handler manually before concluding anything.
+
+## The batch planner (god files / many endpoints)
+
+`scripts/plan_refactor.py` — same stack support, for refactoring ALL
+endpoints at once:
+
+```bash
+python3 scripts/plan_refactor.py --root DIR                    # hotspot inventory
+python3 scripts/plan_refactor.py --root DIR --file src/app.js  # decomposition plan
+```
+
+The inventory ranks every route-defining file by endpoint count and size
+and flags hotspots. The per-file plan clusters the endpoints by path
+resource (sub-clustering when a file is all one resource), marks each
+cluster read-only or read/write, aggregates preserve markers / side
+effects / existing tests, and orders extraction phases **safest first**.
+When the work is "refactor all these endpoints", follow
+[references/godfile-decomposition.md](references/godfile-decomposition.md):
+plan → map shared state and helpers → contract + pin per cluster →
+extract cluster by cluster (delegating mounts, identical registration
+order, full suite after every phase) → retire the god file and report.
 
 ## Workflow
 

@@ -316,6 +316,10 @@ def find_routes(repo):
         if ext in (".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"):
             prefixes = js_mounts.get(path, [""])
             for m in re.finditer(r"""\.\s*(get|post|put|delete|patch|all)\(\s*['"`]([^'"`]*)['"`]""", text):
+                # real route paths start with / or * — this rejects lookups
+                # like c.get('user') or headers.get('accept')
+                if not m.group(2).startswith(("/", "*")):
+                    continue
                 for pre in prefixes:
                     add(m.group(1), join_paths(pre, m.group(2)), path, m, text)
             ctrl = re.search(r"@Controller\(\s*['\"]([^'\"]*)['\"]?\s*\)?", text)
@@ -365,6 +369,8 @@ def find_routes(repo):
 
         elif ext == ".go":
             for m in re.finditer(r'\.\s*(GET|POST|PUT|DELETE|PATCH|Get|Post|Put|Delete|Patch)\(\s*"([^"]+)"', text):
+                if not m.group(2).startswith("/"):  # reject map/config .Get("key") lookups
+                    continue
                 add(m.group(1), m.group(2), path, m, text)
             for m in re.finditer(r'HandleFunc\(\s*"([^"]+)"', text):
                 add("ANY", m.group(1), path, m, text)

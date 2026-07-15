@@ -20,8 +20,12 @@ This repository packages two Claude Code skills as one plugin
 3. Test the tools (stdlib only — do not add external Python dependencies):
    `python3 skills/java-modernization/scripts/search.py "junit" --domain compat`
    `python3 skills/endpoint-rearchitect/scripts/trace_endpoint.py / --list-routes --root <sample>`
-   The universal tracer must keep passing against fixtures in at least
-   TS/Hono, JS/Express (CommonJS), Java/Spring, Python/FastAPI, and Go/Gin.
+   `python3 skills/endpoint-rearchitect/scripts/plan_refactor.py --root <sample>`
+   The universal tracer and batch planner must keep passing against
+   fixtures in at least TS/Hono, JS/Express (CommonJS), Java/Spring,
+   Python/FastAPI, Go/Gin, and a single-file god-file app. JS/Go route
+   detection must reject non-route `.get('key')` lookups (paths start
+   with `/`).
 4. Keep versions in sync across `skill.json`,
    `.claude-plugin/plugin.json`, and `.claude-plugin/marketplace.json`.
 

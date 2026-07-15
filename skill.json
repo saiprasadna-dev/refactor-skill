@@ -1,6 +1,6 @@
 {
   "name": "refactor-skill",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Modernization and re-architecture skills for Claude Code and compatible AI agents. endpoint-rearchitect: trace any endpoint end-to-end in any language and restructure it without changing business logic. java-modernization: enterprise Java/Spring upgrades.",
   "author": "saiprasadna-dev",
   "license": "MIT",
@@ -31,10 +31,12 @@
     ],
     "commands": [
       "commands/rearchitect-endpoint.md",
+      "commands/decompose-file.md",
       "commands/java-modernization.md",
       "commands/java-endpoint.md"
     ],
     "universal_tracer": "skills/endpoint-rearchitect/scripts/trace_endpoint.py",
-    "knowledge_base_search": "skills/java-modernization/scripts/search.py"
+    "knowledge_base_search": "skills/java-modernization/scripts/search.py",
+    "batch_planner": "skills/endpoint-rearchitect/scripts/plan_refactor.py"
   }
 }
