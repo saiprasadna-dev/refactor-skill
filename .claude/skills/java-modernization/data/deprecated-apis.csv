@@ -1,0 +1,35 @@
+old_api,replacement,category,behavior_risk,notes
+java.util.Date / java.util.Calendar,java.time (Instant / LocalDateTime / ZonedDateTime),date-time,medium,Verify timezone and DST handling matches before swapping; do not change stored formats
+java.text.SimpleDateFormat,java.time.format.DateTimeFormatter,date-time,medium,Thread-safe replacement; check pattern letters (u vs y) produce identical output
+javax.persistence.*,jakarta.persistence.*,jakarta,low,Mechanical package rename plus dependency swap; required for Boot 3 / Hibernate 6
+javax.validation.*,jakarta.validation.*,jakarta,low,Add spring-boot-starter-validation explicitly in Boot 3 (no longer transitive)
+javax.servlet.*,jakarta.servlet.*,jakarta,low,Servlet 6.0 for Boot 3; check filters listeners and embedded-container customizers
+javax.annotation.PostConstruct / PreDestroy,jakarta.annotation.PostConstruct / PreDestroy,jakarta,low,Common Annotations moved; jakarta.annotation-api dependency
+javax.transaction.Transactional,jakarta.transaction.Transactional,jakarta,low,Prefer org.springframework.transaction.annotation.Transactional in Spring code
+WebSecurityConfigurerAdapter,SecurityFilterChain @Bean,security,high,Removed in Spring Security 6; recreate the exact same rules and verify authorization behavior test-by-test
+antMatchers / mvcMatchers / regexMatchers,requestMatchers,security,high,Matching semantics can differ; verify every protected route still resolves the same
+authorizeRequests(),authorizeHttpRequests(),security,high,New authorization manager API; keep rule order identical
+@EnableGlobalMethodSecurity,@EnableMethodSecurity,security,medium,prePostEnabled defaults to true in the new annotation — confirm no unintended enablement
+@RunWith(SpringRunner.class),@ExtendWith(SpringExtension.class),testing,low,Usually already meta-annotated by @SpringBootTest in JUnit 5
+@Test(expected = X.class),Assertions.assertThrows,testing,low,JUnit 5 idiom; also replaces @Rule ExpectedException
+@Before / @After / @BeforeClass / @AfterClass,@BeforeEach / @AfterEach / @BeforeAll / @AfterAll,testing,low,JUnit 5 lifecycle annotations
+org.junit.Assert,org.junit.jupiter.api.Assertions,testing,low,Argument order of message parameter changed (message is last in JUnit 5)
+MockitoAnnotations.initMocks,MockitoAnnotations.openMocks or @ExtendWith(MockitoExtension.class),testing,low,initMocks removed in Mockito 4+
+@MockBean / @SpyBean,@MockitoBean / @MockitoSpyBean,testing,low,Deprecated in Spring Boot 3.4+; only rename when on 3.4+
+PowerMock,Mockito inline mock maker (mockStatic / mockConstruction),testing,high,PowerMock is incompatible with JUnit 5 and new JDKs; migration needs per-test review
+Class.newInstance(),getDeclaredConstructor().newInstance(),reflection,low,Checked-exception wrapping differs (InvocationTargetException); adjust catch blocks
+Runtime.exec(String),ProcessBuilder,process,medium,String-tokenization command parsing differs; verify argument splitting
+Thread.stop / suspend / resume,interruption-based cancellation,concurrency,high,Removed/degraded in Java 20+; requires manual redesign — flag do not auto-fix
+Object.finalize(),java.lang.ref.Cleaner or try-with-resources,jdk,high,Terminally deprecated; resource-release timing changes — manual review
+SecurityManager / AccessController,no direct replacement,jdk,high,Deprecated for removal since 17; flag usages as manual review items
+sun.misc.Unsafe / sun.* internals,VarHandle / supported JDK APIs,jdk,high,Encapsulated by JPMS; usually hidden inside old library versions — upgrade the library first
+javax.xml.bind (JAXB),jakarta.xml.bind + org.glassfish.jaxb runtime,jakarta,medium,Removed from the JDK after 8; add explicit dependencies
+java.rmi / Applet APIs,removal or replacement per case,jdk,high,Applet API removed; RMI usage needs architectural review — flag
+new Integer(x) / new Long(x) etc.,Integer.valueOf(x) or autoboxing,jdk,low,Boxed constructors removed in newer JDKs; identity semantics of small values differ — safe unless code compares with ==
+StringBuffer (single-threaded use),StringBuilder,jdk,low,Only when no cross-thread sharing exists
+Vector / Hashtable (non-legacy-API use),ArrayList / HashMap (+ explicit sync if needed),jdk,medium,Only replace when synchronization is provably unnecessary — otherwise leave and flag
+RestTemplate (new code only),RestClient (Spring 6.1+),http,low,RestTemplate is still supported — do NOT rewrite existing usages without approval
+WebClient.exchange(),WebClient.exchangeToMono / retrieve,http,medium,exchange() leaks connections if body unconsumed; verify response handling identical
+Hibernate Criteria (legacy org.hibernate.Criteria),JPA CriteriaBuilder,persistence,high,Removed in Hibernate 6; query semantics must be verified result-by-result
+@Type / custom UserType (Hibernate 5),Hibernate 6 UserType SPI / @JdbcTypeCode,persistence,high,Type system rewritten in Hibernate 6; column mapping must stay identical
+spring.factories auto-configuration,META-INF/spring/...AutoConfiguration.imports,spring,low,Boot 3 registration mechanism; move entries mechanically

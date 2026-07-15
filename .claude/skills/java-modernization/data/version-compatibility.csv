@@ -1,0 +1,29 @@
+component,legacy_typical,minimum_for_target,modern_target,notes
+Java,8 / 11,17,21,Spring Boot 3 requires Java 17+; Java 21 is the current LTS target
+Spring Boot,2.7.x,3.0.0,3.3.x,Spring Boot 2.x is EOL; 3.x requires the jakarta namespace and Java 17+
+Spring Framework,5.3.x,6.0.0,6.1.x,Aligned automatically by the Spring Boot 3 BOM; do not pin separately
+Spring Security,5.7.x,6.0.0,6.3.x,WebSecurityConfigurerAdapter removed; component-based SecurityFilterChain required
+Spring Cloud,2021.0.x (Jubilee),2022.0.0 (Kilburn),2023.0.x (Leyton),Release train must match the Spring Boot minor version
+Hibernate ORM,5.6.x,6.1.0,6.4.x,Managed by Boot 3 BOM; jakarta.persistence; ID generation and dialect changes
+Hibernate Validator,6.2.x,8.0.0,8.0.x,jakarta.validation implementation for Boot 3
+Jakarta EE platform,Java EE 8 (javax),Jakarta EE 9,Jakarta EE 10,Servlet 6.0 / JPA 3.1 / Bean Validation 3.0 for Boot 3
+JUnit,4.13.2,5.8.0,5.10.x,Keep junit-vintage-engine only as a transitional bridge
+Mockito,3.x,4.5.0,5.x,Mockito 5 requires Java 11+ and defaults to the inline mock maker
+Jackson,2.13.x,2.14.0,2.17.x,Managed by Boot BOM; remove explicit pins where possible
+SLF4J,1.7.x,2.0.0,2.0.x,SLF4J 2 uses ServiceLoader binding; logback 1.4+ pairs with it
+Logback,1.2.x,1.4.0,1.5.x,Required by Boot 3 BOM alignment with SLF4J 2
+Maven,3.6.x,3.6.3,3.9.x,Update via Maven wrapper (.mvn/wrapper/maven-wrapper.properties)
+Gradle,6.x / 7.x,8.5,8.7+,Gradle 8.5+ required for Java 21 toolchains; update via gradle wrapper
+maven-compiler-plugin,3.8.x,3.10.0,3.13.x,Prefer <release> over source/target; needed for newer JDK support
+maven-surefire-plugin,2.22.x,3.0.0,3.2.x,Surefire 3.x needed for reliable JUnit 5 discovery; verify test counts
+maven-failsafe-plugin,2.22.x,3.0.0,3.2.x,Align with surefire version for integration tests
+Lombok,1.18.20,1.18.30,1.18.32+,1.18.30+ required for Java 21 bytecode
+MapStruct,1.4.x,1.5.3,1.5.5+,Older versions fail annotation processing on new JDKs
+springdoc-openapi,1.6.x,2.0.0,2.5.x,springdoc 1.x is javax/Boot2-only; 2.x for Boot 3 (new artifact ids)
+Swagger/springfox,2.x / 3.0.0,unsupported,replace with springdoc 2.x,springfox is abandoned and incompatible with Boot 3 — flag for replacement
+Testcontainers,1.16.x,1.17.6,1.19.x,Boot 3.1+ has native @ServiceConnection support
+Flyway,8.x,9.0.0,10.x,Boot 3 BOM manages Flyway 9/10; check DB-specific modules split out in 10
+Liquibase,4.9.x,4.17.0,4.27.x,Managed by Boot 3 BOM
+jaxb (javax.xml.bind),JDK 8 built-in,jakarta.xml.bind-api 4.0,jakarta.xml.bind 4.x,Removed from the JDK after 8/11; add explicit jakarta dependency + runtime (org.glassfish.jaxb)
+AspectJ,1.9.7,1.9.20,1.9.22,Older weavers reject Java 21 class files
+ByteBuddy,1.11.x,1.14.9,1.14.x+,Transitive via Mockito/Hibernate; conflicts cause MockMaker errors on new JDKs

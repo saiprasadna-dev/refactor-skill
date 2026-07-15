@@ -1,0 +1,22 @@
+{
+  "name": "java-modernization",
+  "version": "1.0.0",
+  "description": "Enterprise Java modernization for Claude Code: Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta, dependency alignment, and post-migration build/test fixes — always preserving business logic exactly. Ships a searchable knowledge base of version compatibility, deprecated API replacements, and the javax-to-jakarta package map.",
+  "author": {
+    "name": "saiprasadna-dev"
+  },
+  "homepage": "https://github.com/saiprasadna-dev/refactor-skill",
+  "repository": "https://github.com/saiprasadna-dev/refactor-skill",
+  "license": "MIT",
+  "keywords": [
+    "java",
+    "spring-boot",
+    "modernization",
+    "migration",
+    "refactoring",
+    "jakarta",
+    "maven",
+    "gradle",
+    "upgrade"
+  ]
+}

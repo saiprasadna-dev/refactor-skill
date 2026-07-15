@@ -1,0 +1,27 @@
+{
+  "name": "java-modernization",
+  "version": "1.0.0",
+  "description": "Enterprise Java modernization skill for Claude Code and compatible AI agents. Analyze, upgrade, refactor, validate, and document any Java or Spring Boot application while preserving business logic exactly.",
+  "author": "saiprasadna-dev",
+  "license": "MIT",
+  "repository": "https://github.com/saiprasadna-dev/refactor-skill",
+  "keywords": [
+    "java",
+    "spring-boot",
+    "modernization",
+    "migration",
+    "refactoring",
+    "jakarta",
+    "javax",
+    "maven",
+    "gradle",
+    "junit",
+    "hibernate"
+  ],
+  "entrypoints": {
+    "skill": "skills/java-modernization/SKILL.md",
+    "agent": "agents/java-modernizer.md",
+    "command": "commands/java-modernization.md",
+    "search": "skills/java-modernization/scripts/search.py"
+  }
+}

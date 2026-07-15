@@ -1,0 +1,36 @@
+javax_package,action,jakarta_package,dependency_change,notes
+javax.persistence,MIGRATE,jakarta.persistence,javax.persistence:javax.persistence-api -> jakarta.persistence:jakarta.persistence-api:3.1+,JPA; required by Hibernate 6 / Boot 3
+javax.validation,MIGRATE,jakarta.validation,javax.validation:validation-api -> jakarta.validation:jakarta.validation-api:3.0+,Bean Validation; implementation is hibernate-validator 8+
+javax.servlet,MIGRATE,jakarta.servlet,javax.servlet:javax.servlet-api -> jakarta.servlet:jakarta.servlet-api:6.0+,Servlet API; check web.xml filters listeners
+javax.annotation,MIGRATE,jakarta.annotation,javax.annotation:javax.annotation-api -> jakarta.annotation:jakarta.annotation-api:2.1+,Common Annotations (@PostConstruct @PreDestroy @Resource) — NOT javax.annotation.processing
+javax.transaction,MIGRATE,jakarta.transaction,javax.transaction:javax.transaction-api -> jakarta.transaction:jakarta.transaction-api:2.0+,JTA; @Transactional
+javax.inject,MIGRATE,jakarta.inject,javax.inject:javax.inject -> jakarta.inject:jakarta.inject-api:2.0+,@Inject @Named @Provider
+javax.ws.rs,MIGRATE,jakarta.ws.rs,javax.ws.rs:javax.ws.rs-api -> jakarta.ws.rs:jakarta.ws.rs-api:3.1+,JAX-RS (Jersey 3.x / RESTEasy 6.x)
+javax.jms,MIGRATE,jakarta.jms,javax.jms:javax.jms-api -> jakarta.jms:jakarta.jms-api:3.1+,JMS; broker client libraries must also be jakarta-compatible
+javax.mail,MIGRATE,jakarta.mail,com.sun.mail:javax.mail -> org.eclipse.angus:angus-mail (jakarta.mail 2.1+),Jakarta Mail; angus is the reference runtime
+javax.xml.bind,MIGRATE,jakarta.xml.bind,javax.xml.bind:jaxb-api -> jakarta.xml.bind:jakarta.xml.bind-api:4.0+ plus org.glassfish.jaxb:jaxb-runtime,JAXB; already removed from the JDK after 8
+javax.xml.ws,MIGRATE,jakarta.xml.ws,com.sun.xml.ws -> com.sun.xml.ws:jaxws-rt 4.x (jakarta),JAX-WS SOAP; heavy migration — flag for review
+javax.xml.soap,MIGRATE,jakarta.xml.soap,com.sun.xml.messaging.saaj -> jakarta SAAJ 3.x,Pairs with JAX-WS migration
+javax.websocket,MIGRATE,jakarta.websocket,javax.websocket:javax.websocket-api -> jakarta.websocket:jakarta.websocket-api:2.1+,WebSocket API
+javax.el,MIGRATE,jakarta.el,org.glassfish:javax.el -> org.glassfish.expressly:expressly (jakarta.el 5+),Expression Language; used by Hibernate Validator
+javax.faces,MIGRATE,jakarta.faces,org.glassfish:javax.faces -> org.glassfish:jakarta.faces 4.x,JSF; large migration — flag for review
+javax.ejb,MIGRATE,jakarta.ejb,javax.ejb:javax.ejb-api -> jakarta.ejb:jakarta.ejb-api:4.0+,EJB; consider Spring-native replacement only with approval
+javax.enterprise (CDI),MIGRATE,jakarta.enterprise,javax.enterprise:cdi-api -> jakarta.enterprise:jakarta.enterprise.cdi-api:4.0+,CDI
+javax.json,MIGRATE,jakarta.json,javax.json:javax.json-api -> jakarta.json:jakarta.json-api:2.1+,JSON-P; runtime is org.eclipse.parsson
+javax.cache,KEEP,-,none (JCache JSR-107 stays javax.cache),JCache never moved to jakarta — do not rename
+javax.sql,KEEP,-,none (JDK package),JDBC DataSource/RowSet — part of the JDK forever
+javax.crypto,KEEP,-,none (JDK package),JCA cryptography — JDK package
+javax.naming,KEEP,-,none (JDK package),JNDI — JDK package
+javax.net / javax.net.ssl,KEEP,-,none (JDK package),TLS sockets — JDK package
+javax.security.auth / javax.security.sasl,KEEP,-,none (JDK package),JAAS/SASL — JDK package
+javax.management,KEEP,-,none (JDK package),JMX — JDK package
+javax.annotation.processing,KEEP,-,none (JDK package),Annotation processors (@SupportedAnnotationTypes) — JDK package despite the javax.annotation prefix
+javax.lang.model,KEEP,-,none (JDK package),Language model for annotation processing — JDK package
+javax.tools,KEEP,-,none (JDK package),Compiler API — JDK package
+javax.script,KEEP,-,none (JDK package),Scripting engine API — JDK package
+javax.swing / javax.accessibility,KEEP,-,none (JDK package),Desktop UI — JDK package
+javax.imageio / javax.sound,KEEP,-,none (JDK package),Media APIs — JDK packages
+javax.xml.parsers / javax.xml.transform / javax.xml.xpath / javax.xml.validation / javax.xml.stream / javax.xml.datatype / javax.xml.namespace,KEEP,-,none (JDK packages),JAXP XML processing stays in the JDK — only JAXB/JAX-WS (xml.bind/xml.ws/xml.soap) migrate
+javax.xml.crypto,KEEP,-,none (JDK package),XML digital signatures — JDK package
+javax.rmi.ssl,KEEP,-,none (JDK package),RMI over SSL — JDK package
+javax.smartcardio,KEEP,-,none (JDK package),Smart card I/O — JDK package
