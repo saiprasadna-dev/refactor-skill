@@ -1,7 +1,7 @@
 {
-  "name": "java-modernization",
-  "version": "1.1.0",
-  "description": "Enterprise Java modernization for Claude Code: Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta, dependency alignment, post-migration build/test fixes, and endpoint-by-endpoint re-architecture (trace /search end-to-end, pin behavior with characterization tests, then restructure) — always preserving business logic exactly. Ships a searchable knowledge base and an endpoint slice tracer.",
+  "name": "refactor-skill",
+  "version": "1.2.0",
+  "description": "Modernization and re-architecture for Claude Code. endpoint-rearchitect: language-agnostic endpoint re-architecture (trace /search end-to-end across Java/Kotlin, JS/TS, Python, Go, C#, Ruby, PHP; pin behavior with characterization tests; restructure without changing business logic). java-modernization: Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta, dependency alignment, with a searchable knowledge base.",
   "author": {
     "name": "saiprasadna-dev"
   },
@@ -9,14 +9,17 @@
   "repository": "https://github.com/saiprasadna-dev/refactor-skill",
   "license": "MIT",
   "keywords": [
+    "refactoring",
+    "re-architecture",
+    "modernization",
+    "endpoint",
     "java",
     "spring-boot",
-    "modernization",
+    "typescript",
+    "python",
+    "go",
+    "csharp",
     "migration",
-    "refactoring",
-    "jakarta",
-    "maven",
-    "gradle",
-    "upgrade"
+    "jakarta"
   ]
 }

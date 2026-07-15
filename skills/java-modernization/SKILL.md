@@ -104,6 +104,10 @@ code, and complete it with what static analysis misses (aspects,
 interceptors, `@ControllerAdvice`, security filter-chain rules, config
 properties, DB schema).
 
+For polyglot repositories or non-Spring stacks, use the companion
+`endpoint-rearchitect` skill's universal tracer instead — it supports
+Java/Kotlin, JS/TS, Python, Go, C#, Ruby, and PHP.
+
 ## Workflow
 
 ### Step 1 — Assessment (read-only)
