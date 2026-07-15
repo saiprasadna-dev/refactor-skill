@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Reusable refactoring and modernization skills for Claude Code",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "java-modernization",
       "source": "./",
-      "description": "Enterprise Java modernization: Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta, dependency alignment, and post-migration build/test fixes — always preserving business logic exactly. Includes a searchable knowledge base (version compatibility, deprecated APIs, jakarta package map), a /java-modernization workflow command, and a java-modernizer agent.",
-      "version": "1.0.0",
+      "description": "Enterprise Java modernization: Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta, dependency alignment, post-migration build/test fixes, and endpoint-by-endpoint re-architecture — always preserving business logic exactly. Includes a searchable knowledge base, an endpoint slice tracer, /java-modernization and /java-endpoint commands, and java-modernizer / endpoint-tracer / behavior-guardian agents.",
+      "version": "1.1.0",
       "author": {
         "name": "saiprasadna-dev"
       },

@@ -9,8 +9,10 @@ description: >-
   upgrade (8/11/17 to 21), a Spring Boot 2.x to 3.x upgrade, a
   javax-to-jakarta migration, Maven/Gradle or dependency modernization,
   deprecated API replacement, build or test fixes after migration, safe
-  behavior-preserving refactoring, or a migration report and upgrade plan.
-  Works best for multi-module Maven or Gradle projects.
+  behavior-preserving refactoring, endpoint-by-endpoint re-architecture
+  (trace an endpoint like /search end-to-end, pin its behavior, then
+  restructure), or a migration report and upgrade plan. Works best for
+  multi-module Maven or Gradle projects.
 ---
 
 # Java Modernization
@@ -74,6 +76,33 @@ manual review instead of auto-fixing, and never migrate a KEEP package.
 If a search returns no results, retry with broader terms and `--domain all`.
 If it still returns nothing, say the knowledge base has no entry and reason
 from the repository's actual code — never fabricate a version number.
+
+## Endpoint slice tracer
+
+For re-architecture work scoped to an endpoint, a second dependency-free
+tool maps the full vertical slice:
+
+```bash
+python3 scripts/trace_endpoint.py <endpoint-path> [--root DIR] [--format ascii|md|json] [--depth N]
+# e.g. python3 scripts/trace_endpoint.py /search --root /path/to/project
+```
+
+It finds the controller handler for the path (combining class-level and
+method-level mappings, including `{path-variables}`), walks the dependency
+graph through services, interface→implementation bindings, repositories,
+entities, Feign/Rest clients, and messaging, and reports:
+
+- **behavior markers that must be preserved** — `@Transactional`,
+  `@PreAuthorize`/`@Secured`, `@Valid`, `@Cacheable`, listeners, retries
+- **side effects** — external HTTP calls, Kafka/Rabbit/JMS publishing,
+  direct SQL, email
+- **existing tests touching the slice** — the current safety net; it warns
+  loudly when a slice has none
+
+The tracer is static and heuristic: always verify its map by reading the
+code, and complete it with what static analysis misses (aspects,
+interceptors, `@ControllerAdvice`, security filter-chain rules, config
+properties, DB schema).
 
 ## Workflow
 
@@ -139,6 +168,36 @@ after — a drop is a red flag that must be explained.
 Write `MODERNIZATION_REPORT.md` using
 [references/report-template.md](references/report-template.md). Every
 flagged manual review item must appear in it — nothing is silently dropped.
+
+## Endpoint re-architecture workflow
+
+When the task is to re-architect a specific endpoint (e.g. "restructure
+/search end-to-end"), switch to the playbook in
+[references/endpoint-rearchitecture.md](references/endpoint-rearchitecture.md):
+
+1. **Trace the slice** (read-only) with `scripts/trace_endpoint.py`, then
+   verify and complete the map manually.
+2. **Capture the behavior contract** to
+   `modernization/endpoints/<slug>.contract.md` in the target repo:
+   request/response contracts per status code, security behavior, side
+   effects, observed business rules, non-functional behavior. Ambiguities
+   become "Open questions" / manual review items.
+3. **Pin behavior with characterization tests** that pass against the
+   untouched code first. A slice with zero tests gets no structural change
+   until it is pinned — this phase is blocking.
+4. **Re-architect within the contract** in small always-green commits.
+   Characterization tests stay unmodified and passing. Never change status
+   codes or response fields, move `@Transactional` boundaries, alter cache
+   or query semantics, reorder side effects, weaken validation or
+   security, or silently fix bugs — pin bugs bug-for-bug and record them
+   as manual review items.
+5. **Validate and report**: full build and tests, compare test counts to
+   the baseline, review the diff against the forbidden list, and append an
+   "Endpoint re-architecture" section to `MODERNIZATION_REPORT.md`.
+
+Scale to a whole application by repeating slice by slice; when endpoints
+share a service, trace and pin all sharing endpoints before restructuring
+the shared class.
 
 ## Testing rules
 

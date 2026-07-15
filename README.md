@@ -13,6 +13,9 @@ Covers the classic legacy-to-modern paths:
 - Hibernate 5 → 6, JUnit 4 → 5, Mockito, Jackson, Maven/Gradle plugin alignment
 - Deprecated API replacement, dependency modernization, post-migration
   build/test fixes, migration reports and upgrade planning
+- **Endpoint-by-endpoint re-architecture**: give it one endpoint (e.g.
+  `/search`) and it traces the full vertical slice, pins current behavior,
+  then restructures — business logic untouched
 
 ## What's inside
 
@@ -21,9 +24,10 @@ Covers the classic legacy-to-modern paths:
 | **Skill** (auto-activates) | `skills/java-modernization/SKILL.md` | Priority rules, 5-step workflow (assess → plan → migrate → validate → report), behavior-preservation guardrails |
 | **Knowledge base** | `skills/java-modernization/data/*.csv` | ~30-component version compatibility matrix, 30+ deprecated-API replacements with behavior-risk ratings, full javax→jakarta package map (including which packages must **stay** javax) |
 | **Search engine** | `skills/java-modernization/scripts/search.py` | Dependency-free Python 3 search over the knowledge base (ascii / markdown / json output) |
-| **References** | `skills/java-modernization/references/` | Path-specific upgrade checklists and the required migration-report template |
-| **Slash command** | `commands/java-modernization.md` | `/java-modernization` — run the full workflow on the current repo |
-| **Agent** | `agents/java-modernizer.md` | `java-modernizer` subagent for end-to-end delegated migrations |
+| **Endpoint slice tracer** | `skills/java-modernization/scripts/trace_endpoint.py` | Traces an endpoint (e.g. `/search`) end-to-end: handler → services → repositories → entities → external clients/messaging, flagging every behavior marker (`@Transactional`, security, validation, caching, side effects) and the existing tests covering the slice |
+| **References** | `skills/java-modernization/references/` | Upgrade checklists, the endpoint re-architecture playbook, and the migration-report template |
+| **Slash commands** | `commands/` | `/java-modernization` — full modernization workflow · `/java-endpoint /search` — trace, pin, and re-architect one endpoint slice |
+| **Agents** | `agents/` | `java-modernizer` (end-to-end migrations) · `endpoint-tracer` (read-only slice mapping + behavior contract) · `behavior-guardian` (characterization tests + behavior-change diff review) |
 | **Plugin manifest** | `.claude-plugin/` | Marketplace-installable packaging |
 
 ## Installation
@@ -61,15 +65,35 @@ cp -R refactor-skill/skills/java-modernization ~/.claude/skills/
 > "Migrate javax to jakarta in the payments module"
 > "Fix the build after the JUnit 5 upgrade"
 
-**Workflow mode (slash command).**
+**Workflow mode (slash commands).**
 
 ```
 /java-modernization Java 21 + Spring Boot 3
 /java-modernization assess only
+/java-endpoint /search
+/java-endpoint /api/orders/{id}
 ```
 
-**Agent mode.** Delegate the whole migration to the `java-modernizer`
-subagent for long-running, end-to-end upgrades.
+**Endpoint re-architecture** (`/java-endpoint`) runs a strict 5-phase
+playbook: trace the slice → capture the behavior contract to
+`modernization/endpoints/<slug>.contract.md` → pin behavior with
+characterization tests that pass on the untouched code → restructure in
+small always-green commits with those tests unmodified → validate and
+report. A slice with zero tests gets no structural change until it is
+pinned.
+
+**Agent mode.** Delegate to the subagents: `java-modernizer` for
+long-running end-to-end upgrades, `endpoint-tracer` for read-only slice
+mapping and behavior contracts, `behavior-guardian` for characterization
+tests and behavior-change diff review.
+
+**Trace an endpoint directly** (Python 3, no dependencies):
+
+```bash
+cd skills/java-modernization
+python3 scripts/trace_endpoint.py /search --root /path/to/project
+python3 scripts/trace_endpoint.py /api/orders/{id} --root . --format md
+```
 
 **Direct knowledge-base queries** (Python 3, no dependencies):
 

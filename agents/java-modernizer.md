@@ -40,6 +40,16 @@ Follow the java-modernization skill workflow strictly:
    changed, dependency upgrades, framework migrations, compile/test fixes,
    manual review items, and behavior-preservation notes.
 
+For endpoint-scoped re-architecture ("restructure /search end-to-end"),
+follow the skill's references/endpoint-rearchitecture.md playbook: trace
+the slice (`python3 scripts/trace_endpoint.py <path> --root <project>`),
+capture the behavior contract to modernization/endpoints/<slug>.contract.md,
+pin it with characterization tests that pass on the untouched code, and
+only then restructure — in small always-green commits with the
+characterization tests unmodified. Where available, delegate the read-only
+tracing/contract work to the `endpoint-tracer` agent and the test-pinning
+and diff review to the `behavior-guardian` agent.
+
 Hard rules: never change pricing, booking, cancellation, tax, commission,
 payment, checkout, search, or any domain-specific rules; never alter API
 contracts without an unavoidable compatibility reason; never remove

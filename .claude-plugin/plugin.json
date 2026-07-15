@@ -1,7 +1,7 @@
 {
   "name": "java-modernization",
-  "version": "1.0.0",
-  "description": "Enterprise Java modernization for Claude Code: Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta, dependency alignment, and post-migration build/test fixes — always preserving business logic exactly. Ships a searchable knowledge base of version compatibility, deprecated API replacements, and the javax-to-jakarta package map.",
+  "version": "1.1.0",
+  "description": "Enterprise Java modernization for Claude Code: Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta, dependency alignment, post-migration build/test fixes, and endpoint-by-endpoint re-architecture (trace /search end-to-end, pin behavior with characterization tests, then restructure) — always preserving business logic exactly. Ships a searchable knowledge base and an endpoint slice tracer.",
   "author": {
     "name": "saiprasadna-dev"
   },
