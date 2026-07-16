@@ -81,8 +81,24 @@ refactor, or they are not characterizing reality.
 
 ## Phase 4 — Re-architect within the contract
 
-Now restructure freely as long as every characterization test stays green
-and unmodified:
+Now restructure as long as every characterization test stays green and
+unmodified. Execution policy:
+
+- **All layers.** The refactor covers every layer of the slice —
+  controller, DTOs, service, domain, repository, wiring. The slice map is
+  the checklist: each class is refactored, replaced by a new dedicated
+  class, or explicitly recorded as left as-is with a reason.
+- **Heavy shared classes.** If the endpoint depends on a god service or
+  mega-repository used by other endpoints, do not restructure it in
+  place. Extract dedicated classes for this slice, move the exact logic
+  verbatim (no improvements during the move), point this endpoint at
+  them, leave other callers untouched, and delete moved code from the old
+  class only when provably dead — strangler fig, slice by slice.
+- **Tests first, tests for everything.** Characterization tests are green
+  on the untouched code before any move; the suite stays green after each
+  move; every new class gets its own unit tests and every changed layer
+  gets tests covering the change; the run finishes with the full suite
+  green and the characterization tests unmodified.
 
 Allowed structural moves:
 

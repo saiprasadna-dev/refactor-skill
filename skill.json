@@ -1,6 +1,6 @@
 {
   "name": "refactor-skill",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Modernization and re-architecture skills for Claude Code and compatible AI agents. endpoint-rearchitect: trace any endpoint end-to-end in any language and restructure it without changing business logic. java-modernization: enterprise Java/Spring upgrades.",
   "author": "saiprasadna-dev",
   "license": "MIT",

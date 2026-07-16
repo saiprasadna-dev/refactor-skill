@@ -30,8 +30,13 @@ Use the endpoint-rearchitect skill's god-file decomposition playbook
    the cluster module in the project's idiom, move the endpoints, leave a
    delegating mount in the original file, keep route/middleware
    registration order identical, run the FULL characterization suite, and
-   commit — always green, pinned tests unmodified. Never duplicate shared
-   state, never fix bugs silently (pin bug-for-bug and record them).
+   commit — always green, pinned tests unmodified. Each extraction covers
+   ALL layers of the cluster (routes, handlers, services, data access):
+   if a cluster leans on a heavy shared class, extract dedicated classes
+   for it and move the exact logic verbatim, leaving other callers
+   untouched. Every new module and class gets its own unit tests — new
+   code without tests does not land. Never duplicate shared state, never
+   fix bugs silently (pin bug-for-bug and record them).
 5. **Retire & report:** the original file ends as composition root (or is
    inlined); re-run the hotspot inventory for the before/after evidence;
    append a "God-file decomposition" section to MODERNIZATION_REPORT.md.

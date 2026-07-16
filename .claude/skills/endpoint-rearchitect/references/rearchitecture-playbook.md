@@ -82,8 +82,51 @@ mandatory and blocking — no structural change lands on an unpinned slice.
 
 ## Phase 4 — Re-architect within the contract
 
-Allowed structural moves (behavior identical by construction or proven by
-the pinned tests):
+### Execution policy: all layers, dedicated classes, test-first
+
+**All layers.** "Refactor this endpoint end-to-end" means changing every
+layer the slice touches — route registration, controller/handler, DTOs/
+serialization, service, domain logic, data access, and wiring/config. Do
+not stop at the controller: a refactor that cleans the top layer and
+leaves the endpoint's service and data-access code tangled has not
+delivered the slice. The tracer's slice map is the checklist — every file
+in it is either refactored, replaced by a new dedicated class, or
+explicitly recorded as "left as-is because <reason>".
+
+**Heavy shared classes → create your own.** When the endpoint depends on
+a heavy class (lots of code, used by other endpoints — a god service,
+mega-repository, or utility dump), do NOT restructure that class in
+place; other endpoints depend on it and are not pinned. Instead:
+
+1. Create new, dedicated class(es) for this endpoint's slice (e.g.
+   extract `SearchService` + `SearchRepository` out of a 2000-line
+   `AppService`), named for the capability, in the target architecture's
+   shape.
+2. Move the exact logic paths this endpoint exercises into them —
+   copy semantics verbatim, no "improvements" during the move.
+3. Point this endpoint at the new classes; other endpoints keep using
+   the old heavy class untouched. Delete the moved code from the heavy
+   class only when nothing else calls it (dead-code check), otherwise
+   leave it and record the duplication as a tracked item for the next
+   slice.
+4. The heavy class shrinks slice by slice (strangler fig) — never in one
+   big rewrite.
+
+**Test-first, and tests for everything.** The strict order is:
+
+1. Characterization tests (Phase 3) written FIRST and green against the
+   untouched code — this is what "make it work before changes" means.
+2. Refactor, layer by layer, keeping the suite green after each move.
+3. Every new class created gets its own unit tests (its public methods,
+   edge cases, and error paths), and every changed layer gets tests that
+   cover the change — new code without tests does not land.
+4. Finish with the full suite green and the characterization tests
+   UNMODIFIED — proving behavior after the refactor equals behavior
+   before it.
+
+### Allowed structural moves
+
+Behavior identical by construction or proven by the pinned tests:
 
 - Split god-classes/modules into cohesive units; introduce interfaces/
   ports at seams

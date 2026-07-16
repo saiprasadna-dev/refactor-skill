@@ -24,7 +24,16 @@ Follow the java-modernization skill's endpoint re-architecture playbook
    security cases, side-effect assertions) that pass against the
    UNTOUCHED code first. If the slice has no tests, this phase is
    mandatory and blocking.
-4. **Re-architect within the contract**, in small always-green commits.
+4. **Re-architect within the contract**, in small always-green commits,
+   across ALL layers of the slice (controller, DTOs, service, domain,
+   repository, wiring) — the slice map is the checklist; each class in it
+   is refactored, replaced, or explicitly recorded as left as-is with a
+   reason. If the endpoint depends on a heavy service/repository shared
+   by other endpoints, do NOT restructure it in place: extract dedicated
+   classes for this slice (e.g. a focused SearchService out of a god
+   service), move the exact logic verbatim, point this endpoint at them,
+   and leave other callers untouched (strangler fig). Every new class
+   gets its own unit tests — new code without tests does not land.
    Characterization tests stay unmodified and passing. Never: change
    status codes/response fields, move @Transactional boundaries, alter
    cache or query semantics, reorder side effects, weaken validation or

@@ -113,11 +113,20 @@ Follow the five phases in
    test harness (see the playbook's per-stack table). Tests must pass
    against the untouched code first. A slice with zero tests gets no
    structural change until pinned — blocking.
-4. **Re-architect within the contract** in small always-green commits.
-   Characterization tests stay unmodified and passing. Never change status
-   codes or response shapes, move transaction boundaries, alter cache or
-   query semantics, reorder side effects, weaken validation or auth, or
-   silently fix bugs — pin bugs bug-for-bug and record them.
+4. **Re-architect within the contract** in small always-green commits —
+   across **every layer** the slice touches (route, controller, DTOs,
+   service, domain, data access, wiring); the slice map is the checklist
+   and each file in it is refactored, replaced, or explicitly recorded as
+   left as-is with a reason. When the endpoint depends on a **heavy
+   shared class** used by other endpoints, do not restructure it in
+   place: create new dedicated classes for this slice, move the exact
+   logic verbatim, point this endpoint at them, and leave other callers
+   on the old class (strangler fig). Every new class gets its own unit
+   tests — new code without tests does not land. Characterization tests
+   stay unmodified and passing. Never change status codes or response
+   shapes, move transaction boundaries, alter cache or query semantics,
+   reorder side effects, weaken validation or auth, or silently fix
+   bugs — pin bugs bug-for-bug and record them.
 5. **Validate and report**: full build and test suite, compare test counts
    with the baseline, review the diff against the forbidden list, append
    an "Endpoint re-architecture" section to `MODERNIZATION_REPORT.md`.

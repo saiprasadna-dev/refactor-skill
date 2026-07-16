@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Reusable refactoring, re-architecture, and modernization skills for Claude Code (any language)",
-    "version": "1.3.0"
+    "version": "1.4.0"
   },
   "plugins": [
     {
       "name": "refactor-skill",
       "source": "./",
       "description": "Two skills: endpoint-rearchitect \u2014 language-agnostic endpoint re-architecture with a universal tracer (Java/Kotlin, JS/TS, Python, Go, C#, Ruby, PHP; 20+ frameworks), behavior contracts, and characterization-test pinning; java-modernization \u2014 Java 8/11/17 to 21, Spring Boot 2.x to 3.x, javax-to-jakarta with a searchable knowledge base. Commands: /rearchitect-endpoint, /java-modernization, /java-endpoint. Agents: endpoint-tracer, behavior-guardian, java-modernizer. Business logic is never changed.",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "author": {
         "name": "saiprasadna-dev"
       },

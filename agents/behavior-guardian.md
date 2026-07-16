@@ -45,6 +45,12 @@ behavior contract:
 - Check that characterization tests were not modified to make the diff
   pass — a changed assertion in a characterization test is a behavior
   change until proven otherwise.
+- Check the execution policy was followed: every new class introduced by
+  the refactor has its own unit tests (new code without tests is a
+  WARNING); logic moved out of a heavy shared class into a dedicated
+  class is verbatim (diff the moved bodies — an "improved" move is a
+  behavior change until proven otherwise); other callers of the heavy
+  class are untouched.
 - Verify test discovery counts did not drop versus the baseline.
 - Classify every finding: BLOCKER (behavior changed), WARNING (cannot
   prove equivalence — needs a manual review item), OK (provably
