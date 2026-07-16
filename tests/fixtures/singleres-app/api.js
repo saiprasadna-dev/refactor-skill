@@ -1,0 +1,8 @@
+const express = require('express')
+const app = express()
+app.get('/account/profile', (req, res) => res.json({}))
+app.put('/account/profile', (req, res) => res.json({}))
+app.get('/account/settings', (req, res) => res.json({}))
+app.put('/account/settings', (req, res) => res.json({}))
+app.post('/account/password', (req, res) => res.json({}))
+app.delete('/account', (req, res) => res.json({}))
